@@ -42,7 +42,7 @@ const categorySchema= new mongoose.Schema({
 categorySchema.post('init', (doc) => {
     if (doc.image) {
         if (!doc.image.startsWith('http')) {
-            const baseUrl = process.env.BASE_URL;
+            const baseUrl = process.env.CLOUDINARY_BASE_URL;
             doc.image = `${baseUrl}/${doc.image}`;
         }
     }
