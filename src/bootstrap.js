@@ -15,6 +15,7 @@ import Stripe from "stripe";
 import asyncHandler from './middleware/asyncHandler.js'
 import Order from '../DB/models/Order.js'
 import Cart from '../DB/models/Cart.js'
+import AppError from './utils/Error.js'
 
 
 dotenv.config()
@@ -26,60 +27,19 @@ function bootstrap(app, express) {
         console.log(err)
     })
     connected()
-    // const endpointSecret = 'whsec_L7efZH6QK6U41OKQwFYAhTkJxCgZCNIW';
-
-    // app.post('/webhook', express.raw({ type: 'application/json' }), asyncHandler(
-    //     async(req, res) => {
-    //         let event = req.body;
-    //         if (endpointSecret) {
-    //             const signature = req.headers['stripe-signature'].toString();
-    //             event = stripe.webhooks.constructEvent(
-    //                 req.body,
-    //                 signature,
-    //                 endpointSecret
-    //             );
-    //         }
-    //         let checkoutSessionCompleted
-    //         if (event.type == "checkout.session.completed") {
-    //             checkoutSessionCompleted = event.data.object
-    //             const userId = session.client_reference_id;
-    //             try {
-    //                 const order = await Order.findOneAndUpdate({ user: userId }, { isPaid: true }, { new: true });
-    //                 if (!order) {
-    //                     console.error(`Order not found for user: ${userId}`);
-    //                     return res.status(404).send('Order not found');
-    //                 }
-    //                 await Cart.findOneAndDelete({ user: userId });
-    //             } catch (error) {
-    //                 console.error('Error updating order or deleting cart:', error);
-    //                 return res.status(500).send('Internal Server Error');
-    //             }
-    //         } else {
-    //             console.log(`unhandeled event type ${event.type}`);
-    //         }
-    //         res.status(200).json({ checkoutSessionCompleted })
-    //     }
-    // ));
-
     const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
 
-    app.post('/webhook', express.raw({ type: 'application/json' }), asyncHandler(
+    app.post('/api/webhook', express.raw({ type: 'application/json' }), asyncHandler(
         async (req, res) => {
             let event;
-            try {
-                const signature = req.headers['stripe-signature'];
+                const signature = req.headers['stripe-signature'].toString();
                 event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
-            } catch (err) {
-                console.error('Webhook signature verification failed:', err.message);
-                return res.status(400).send(`Webhook Error: ${err.message}`);
-            }
-
+                let session 
             if (event.type === "checkout.session.completed") {
-                const session = event.data.object;
+                 session = event.data.object;
                 const userId = session.client_reference_id;
                 const order_id=session.metadata.order_id
 
-                try {
                     console.log(userId,order_id);
                     
                     const order = await Order.findByIdAndUpdate(order_id, { isPaid: true }, { new: true });
@@ -88,15 +48,13 @@ function bootstrap(app, express) {
                         return res.status(404).send('Order not found');
                     }
                     await Cart.findOneAndDelete({ user: userId });
-                } catch (error) {
-                    console.error('Error updating order or deleting cart:', error);
-                    return res.status(500).send('Internal Server Error');
-                }
             } else {
                 console.log(`Unhandled event type: ${event.type}`);
+                return next(new AppError("Unhandled event type", 404));
+                
             }
 
-            res.status(200).json({ received: true });
+            res.status(200).json({ received: true,session });
         }
     ));
 

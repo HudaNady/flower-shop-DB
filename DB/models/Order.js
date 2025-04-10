@@ -45,8 +45,9 @@ const orderSchema= new mongoose.Schema({
         default:'cash'
     },
     shippingAddress:{
-        type:{String,
+        type:{
         street: String,
+        city:String,
         mobileNumber:String,},
         required:true
     },

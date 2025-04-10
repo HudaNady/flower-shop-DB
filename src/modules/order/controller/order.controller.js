@@ -65,7 +65,7 @@ export const addOrder = asyncHandler(async (req, res, next) => {
             customer_email:req.user.email,
             metadata:{
                 order_id:newOrder._id.toString(),
-                shippingAddress:req.body.shippingAddress
+                shippingAddress:JSON.stringify(req.body.shippingAddress)
             }
         });
         return res.status(200).json({ session });
