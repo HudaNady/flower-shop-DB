@@ -1,31 +1,46 @@
-import multer from "multer";
-import AppError from "../utils/Error.js";
-import fs from 'fs'
+import cloudinary from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import multer from 'multer';
+import AppError from '../utils/Error.js';
 
-export const customValdation={
-    images:["image/png","img/gif","image/jpeg"]
-}
-const upload = (validation,folderName) => {
-    if(!fs.existsSync(`./uploads/${folderName}`)){
-        fs.mkdirSync(`./uploads/${folderName}`)
-    }
-    const storage = multer.diskStorage({
-        destination: function (req, file, cb) {
-            cb(null, `uploads/${folderName}`);
-        },
-        filename: function (req, file, cb) {
-            const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-            cb(null, file.fieldname + "-" + uniqueSuffix);
-        },
-    });
-    const fileFilter = (req, file, cb) => {
-        if (validation.includes(file.mimetype) ) {
-            cb(null, true);
-        } else {
-            cb(new AppError("invalid file formal", 400));
-        }
-    };
-    const upload = multer({ storage, fileFilter });
-    return upload;
+// Configure Cloudinary
+cloudinary.v2.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+export const customValdation = {
+    images: ["image/png", "image/gif", "image/jpeg"]
 };
+// Function to create a Multer upload middleware with Cloudinary
+const upload = (validation, folderName) => {
+    // Set up Cloudinary storage
+    const storage = new CloudinaryStorage({
+        cloudinary: cloudinary.v2,
+        params: {
+            folder: folderName, // Specify the folder in Cloudinary
+            allowed_formats: validation.map(format => format.split('/')[1]) // Extract format from MIME type
+        }
+    });
+
+    // Set up Multer with Cloudinary storage
+    const multerUpload = multer({ storage });
+
+    return (req, res, next) => {
+        multerUpload.single('image')(req, res, (err) => {
+            if (err) {
+                console.error("Upload error:", err);
+                return next(new AppError("Failed to upload file", 500));
+            }
+
+            if (!req.file) {
+                return next(new AppError("No file uploaded", 400));
+            }
+
+            // File uploaded successfully, proceed to next middleware
+            next();
+        });
+    };
+};
+
 export default upload;

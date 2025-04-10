@@ -27,24 +27,26 @@ const categorySchema= new mongoose.Schema({
 },{
     timestamps:true
 })
-
-// // Pre-save middleware to modify the image path before saving
-// categorySchema.pre('save', function(next) {
-//     if (this.isModified('image') && this.image) {
-//         const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-//         this.image = `${baseUrl}/uploads/category/${this.image}`;
-//     }
-//     next();
-// });
+//local
 
 // Middleware to modify the image path after document initialization
+// categorySchema.post('init', (doc) => {
+//     if (doc.image) {
+//         const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+//         doc.image = `${baseUrl}/uploads/${doc.image}`;
+//     }
+// });
+
+
+//online Cloudinary
 categorySchema.post('init', (doc) => {
     if (doc.image) {
-        const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-        doc.image = `${baseUrl}/uploads/category/${doc.image}`;
+        if (!doc.image.startsWith('http')) {
+            const baseUrl = process.env.BASE_URL;
+            doc.image = `${baseUrl}/${doc.image}`;
+        }
     }
 });
-
 
 const Category=mongoose.model('Category',categorySchema)
 export default Category

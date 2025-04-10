@@ -21,7 +21,7 @@ const productSchema= new mongoose.Schema({
         required:[true,'slug is required'],
         lowerCase:true
     },
-    mainImage:String,
+    image:String,
     coverImage:[String],
     price:{
         type:Number,
@@ -73,14 +73,23 @@ const productSchema= new mongoose.Schema({
     }
 
 })
-productSchema.post('init',(doc)=>{
-    if(doc.mainImage){
-        doc.mainImage='http://localhost:3000/uploads/product/' + doc.mainImage
+// productSchema.post('init',(doc)=>{
+//     if(doc.mainImage){
+//         doc.mainImage='http://localhost:3000/uploads/product/' + doc.mainImage
+//     }
+//         let data= doc.coverImage.map((ele)=>{`http://localhost:3000/uploads/product/ ${ele} `
+//         doc.coverImage=data
+//     })
+// })
+//online Cloudinary
+productSchema.post('init', (doc) => {
+    if (doc.image) {
+        if (!doc.image.startsWith('http')) {
+            const baseUrl = process.env.BASE_URL;
+            doc.image = `${baseUrl}/${doc.image}`;
+        }
     }
-        let data= doc.coverImage.map((ele)=>{`http://localhost:3000/uploads/product/ ${ele} `
-        doc.coverImage=data
-    })
-})
+});
 productSchema.virtual("reviews",{
     ref:"Review",
     localField:"_id",

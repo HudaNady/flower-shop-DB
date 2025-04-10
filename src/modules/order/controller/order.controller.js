@@ -43,7 +43,8 @@ export const addOrder = asyncHandler(async (req, res, next) => {
 
     // Handle payment method
     if (req.body.paymentMethod === "card") {
-        const YOUR_DOMAIN = 'http://localhost:4242';
+        const domain=req.query.domain
+        const YOUR_DOMAIN =domain || 'http://localhost:4242';
         const session = await stripe.checkout.sessions.create({
             line_items: [
                 {

@@ -7,11 +7,12 @@ import { authentication, authorization } from "../../middleware/auth.js";
 import roles from "../../types/roles.js";
 
 
-const router=Router()
-router.post('/addProduct',authentication,authorization([roles.admin]),upload(customValdation.images,'product').fields([{name:'mainImage',maxCount:1},{name:'coverImage',maxCount:5}]),validation(addProductSchema),product.addProduct)
-router.get('/',product.getAllProducts)
+const router=Router({mergeParams:true})
+router.post('/addProduct',authentication,authorization([roles.admin]),upload(customValdation.images,'product'),validation(addProductSchema),product.addProduct)
+router.get('/all',product.getAllProducts)
+router.get('/',product.getAllProductsInCatecory)
 router.get('/:_id',product.getProductById)
-router.put('/:_id',authentication,authorization([roles.admin]),upload(customValdation.images,'product').fields([{name:'mainImage',maxCount:1},{name:'coverImage',maxCount:5}]),product.updateProduct)
+router.put('/:_id',authentication,authorization([roles.admin]),upload(customValdation.images,'product'),product.updateProduct)
 router.delete('/:_id',authentication,authorization([roles.admin]),product.deleteProduct)
 
 
