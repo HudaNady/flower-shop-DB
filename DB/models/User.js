@@ -45,6 +45,7 @@ const userSchema = new mongoose.Schema({
             type: Types.ObjectId,
             ref: 'Product'
     }],
+    mobileNumber:String,
     address: [{
         city: String,
         street: String,
