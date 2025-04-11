@@ -62,11 +62,11 @@ export const deleteCategory = asyncHandler(async (req, res, next) => {
     }
 
     // Delete category image
-    if (category.image) {
-        const fulpath=category.image.split("/")
-        const filename=fulpath[fulpath.length-1]
-        await deleteImageFile(filename,'category');
-    }
+    // if (category.image) {
+    //     const fulpath=category.image.split("/")
+    //     const filename=fulpath[fulpath.length-1]
+    //     await deleteImageFile(filename,'category');
+    // }
 
     const praductsOfCategoryDel=await Product.find({category:req.params._id})
     await Category.findByIdAndDelete(req.params._id);

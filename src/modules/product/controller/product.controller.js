@@ -75,11 +75,11 @@ export const deleteProduct = asyncHandler(async (req, res, next) => {
 
     // Delete main image
     if (product.image) {
-        const fulpath=product.mainImage.split("/")
+        const fulpath=product.image.split("/")
         const filename=fulpath[fulpath.length-1]
         console.log(filename);
         
-        await deleteImageFile(filename, 'product');
+        // await deleteImageFile(filename, 'product');
         await Product.findByIdAndDelete(req.params._id);
         return res.status(200).json({ message: "Product deleted successfully", product });
     }

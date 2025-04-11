@@ -53,7 +53,16 @@ export const forgotpass = asyncHandler(async (req, res, next) => {
     userExist.code=code
     userExist.codeExpires = Date.now() + 3600000; // 1 hour
     await userExist.save();
-    sendEmail({ to: email, html: `<p> Your verification code is:<span style="color:blue">${code}</span></spane></p>` });
+    const emailOptions = {
+        to: email,
+        html: `<p> Your verification code is:<span style="color:blue">${code}</span></spane></p>`,
+    };
+    try {
+        await sendEmail(emailOptions);
+        console.log('Password reset email sent successfully!');
+    } catch (error) {
+        console.error('Failed to send email:', error);
+    }
     return res
         .status(201)
         .json({ message: "check you email and reset password" });

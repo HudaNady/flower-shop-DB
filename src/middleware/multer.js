@@ -34,7 +34,8 @@ const upload = (validation, folderName) => {
             }
 
             if (!req.file) {
-                return next(new AppError("No file uploaded", 400));
+                console.log("No file uploaded, proceeding without file.");
+                return next();
             }
 
             // File uploaded successfully, proceed to next middleware
