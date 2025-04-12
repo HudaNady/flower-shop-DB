@@ -17,4 +17,5 @@ export const updateUserSchema=joi.object({
   firstName:joi.string().lowercase().min(3).max(15).trim().message({message:'Last name must be a string'}),
   email:joi.string().email().messages({message:'Email must be a valid email address'}),
   mobileNumber:joi.string().pattern(/^01[0-2,5]{1}[0-9]{8}$/).messages({message:'Mobile number must be valid mobile number'}),
+  userName:joi.string().lowercase().min(3).max(30).trim().messages({message:'First name must be a string'})
 })
