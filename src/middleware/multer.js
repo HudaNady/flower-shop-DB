@@ -10,7 +10,7 @@ cloudinary.v2.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 export const customValdation = {
-    images: ["image/png", "image/gif", "image/jpeg"]
+    images: ["image/png", "image/gif", "image/jpeg" ,"image/webp"]
 };
 // Function to create a Multer upload middleware with Cloudinary
 const upload = (validation, folderName) => {

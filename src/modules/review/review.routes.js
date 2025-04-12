@@ -8,7 +8,7 @@ const router=Router()
 router.post('/addReview',authentication,authorization([roles.user]),review.addReview)
 router.get('/getAllReview',review.getAllReviews)
 router.get('/:_id',review.getReviewById)
-router.put('/:_id',authentication,authorization([roles.admin,roles.user]),review.updateReview)
-router.delete('/:_id',authentication,authorization([roles.admin,roles.user]),review.deleteReview)
+router.put('/:_id',authentication,authorization([roles.user]),review.updateReview)
+router.delete('/:_id',authentication,authorization([roles.admin]),review.deleteReview)
 
 export default router
