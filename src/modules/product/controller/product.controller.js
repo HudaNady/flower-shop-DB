@@ -94,7 +94,9 @@ export const deleteProduct = asyncHandler(async (req, res, next) => {
 });
 
 export const updateProduct = asyncHandler(async (req, res, next) => {
-    req.body?.slug = slugify(req.body.title);
+    if(req.body.title){
+        req.body.slug = slugify(req.body.title);
+    }
     req.body.updatedBy = req.user._id;
     const oldProduct = await Product.findById(req.params._id);
     if (!oldProduct) {
