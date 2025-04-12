@@ -46,16 +46,17 @@ const userSchema = new mongoose.Schema({
             ref: 'Product'
     }],
     mobileNumber:String,
-    address: [{
-        city: String,
-        street: String,
-    }],
+    city: String,
+    street: String,
 }, {
     timestamps: true 
 });
 
 userSchema.virtual('userName').get(function(){
     return `${this.firstName} ${this.lastName}`
+})
+userSchema.virtual('address').get(function(){
+    return `${this.city}, ${this.street} st`
 })
 userSchema.set('toJSON',{virtuals:true})
 
