@@ -8,7 +8,6 @@ import wishList from './modules/wishList/wishList.routes.js'
 import cart from './modules/cart/cart.routes.js'
 import order from './modules/order/order.routes.js'
 import coupon from './modules/coupon/coupon.routes.js'
-import address from './modules/address/address.routes.js'
 import authRouter from './modules/auth/auth.routes.js'
 import userRouter from './modules/user/user.routes.js'
 import Stripe from "stripe";
@@ -62,7 +61,6 @@ function bootstrap(app, express) {
     app.use(express.json())
     app.use(`${baseUrl}/categories`, category)
     app.use(`${baseUrl}/products`, product)
-    app.use(`${baseUrl}/addresses`, address)
     app.use(`${baseUrl}/coupon`, coupon)
     app.use(`${baseUrl}/order`, order)
     app.use(`${baseUrl}/cart`, cart)
