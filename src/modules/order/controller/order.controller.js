@@ -59,8 +59,8 @@ export const addOrder = asyncHandler(async (req, res, next) => {
                 },
             ],
             mode: 'payment',
-            success_url: `${YOUR_DOMAIN}?success=true`,
-            cancel_url: `${YOUR_DOMAIN}?canceled=true`,
+            success_url: `${YOUR_DOMAIN}/confirmation/?success=true`,
+            cancel_url: `${YOUR_DOMAIN}/ShoppingCart/?canceled=true`,
             client_reference_id: req.user._id,
             customer_email:req.user.email,
             metadata:{
@@ -78,7 +78,7 @@ export const addOrder = asyncHandler(async (req, res, next) => {
 
 
 export const getUserOrders = asyncHandler(async (req, res, next) => {
-    const orders = await Order.find({user:req.user._id})
+    const orders = await Order.find({user:req.user._id}).populate('products.product','title priceAfterDiscount')
 
     if (orders.length) {
         return res.status(200).json({ message: "Orders retrieved successfully", orders });
@@ -87,7 +87,7 @@ export const getUserOrders = asyncHandler(async (req, res, next) => {
 });
 
 export const getAllOrders = asyncHandler(async (req, res, next) => {
-    const orders = await Order.find()
+    const orders = await Order.find().populate('user','name')
 
     if (orders.length) {
         return res.status(200).json({ message: "Orders retrieved successfully", orders });
