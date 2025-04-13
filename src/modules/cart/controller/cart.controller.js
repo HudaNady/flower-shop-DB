@@ -214,7 +214,7 @@ export const applyCoupon = asyncHandler(async (req, res, next) => {
 });
 
 export const getCart = asyncHandler(async (req, res, next) => {
-    const cart = await Cart.findOne({ user: req.user._id });
+    const cart = await Cart.findOne({ user: req.user._id }).populate('products.product');
     if (!cart) {
         return next(new AppError("Cart not found", 404));
     }
