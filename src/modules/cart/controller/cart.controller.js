@@ -215,7 +215,7 @@ export const applyCoupon = asyncHandler(async (req, res, next) => {
   if (!cart) {
     return res.status(200).json({
         message: "Cart is empty",
-        data: {
+        cart: {
           products: [],
         },
       },200);  }
@@ -233,7 +233,7 @@ export const getCart = asyncHandler(async (req, res, next) => {
   if (!cart) {
     return res.status(200).json({
       message: "Cart is empty",
-      data: {
+      cart: {
         products: [],
       },
     },200);
@@ -251,7 +251,7 @@ export const deleteProduct = asyncHandler(async (req, res, next) => {
   if (!cart) {
     return res.status(200).json({
         message: "Cart is empty",
-        data: {
+        cart: {
           products: [],
         },
       },200);
@@ -267,7 +267,7 @@ export const updateProductQuantity = asyncHandler(async (req, res, next) => {
   if (!cart) {
     return res.status(200).json({
         message: "Cart is empty",
-        data: {
+        cart: {
           products: [],
         },
       },200);  }
@@ -290,7 +290,7 @@ export const deleteCart = asyncHandler(async (req, res, next) => {
   if (!cart) {
     return res.status(200).json({
         message: "Cart is empty",
-        data: {
+        cart: {
           products: [],
         },
       },200);
