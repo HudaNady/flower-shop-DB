@@ -26,7 +26,7 @@ export  const getWishList=asyncHandler(
         });;
 
         if (!user || !user.wishList || user.wishList.length === 0) {
-            return next(new AppError("No wishlist items found", 404));
+            return res.status(200).json({ message: "Wishlist empty", wishList: user.wishList });
         }
     
         return res.status(200).json({ message: "Wishlist retrieved successfully", wishList: user.wishList });
