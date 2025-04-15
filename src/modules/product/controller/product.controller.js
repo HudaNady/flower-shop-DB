@@ -22,7 +22,9 @@ export const addProduct = asyncHandler(async (req, res, next) => {
 });
 
 export const getAllProducts = asyncHandler(async (req, res, next) => {
+
     const mongooseQuery = Product.find();
+    
     const apiFeatures = new ApiFeatures(mongooseQuery, req.query)
             .pagination() 
             .sort()       
@@ -34,9 +36,10 @@ export const getAllProducts = asyncHandler(async (req, res, next) => {
             path: 'category'
         }
     ]);
-
+    const totalProduct=await Product.find()
+        const total=totalProduct.length
     if (products.length) {
-        return res.status(200).json({ message: "Products retrieved successfully", products });
+        return res.status(200).json({ message: "Products retrieved successfully",total, products });
     }
     return res.status(404).json({ message: "Products not found", products: [] });
 });
