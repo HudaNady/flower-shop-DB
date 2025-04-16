@@ -63,6 +63,13 @@ export const getProductById = asyncHandler(async (req, res, next) => {
         {
             path: 'category'
         },
+        {
+            path: 'reviews',
+            populate: {
+                path: 'user',
+                select: 'name email' 
+            }
+        }
     ]);
     if (product) {
         return res.status(200).json({ message: "Product retrieved successfully", product });
