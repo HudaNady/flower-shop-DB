@@ -65,7 +65,7 @@ function bootstrap(app, express) {
     app.use(`${baseUrl}/order`, order)
     app.use(`${baseUrl}/cart`, cart)
     app.use(`${baseUrl}/wishList`, wishList)
-    app.use(`${baseUrl}/review`, review)
+    app.use(`${baseUrl}/reviews`, review)
     app.use(`${baseUrl}/auth`, authRouter)
     app.use(`${baseUrl}/users`, userRouter)
     app.use('*', (req, res) => {

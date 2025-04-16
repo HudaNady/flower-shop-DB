@@ -26,7 +26,7 @@ export  const getWishList=asyncHandler(
         });;
 
         if (!user || !user.wishList || user.wishList.length === 0) {
-            return res.status(200).json({ message: "Wishlist empty", wishList: user.wishList });
+            return res.status(200).json({ message: "Wishlist empty", wishList:[] });
         }
     
         return res.status(200).json({ message: "Wishlist retrieved successfully", wishList: user.wishList });
