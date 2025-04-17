@@ -68,7 +68,7 @@ function bootstrap(app, express) {
     app.use(`${baseUrl}/reviews`, review)
     app.use(`${baseUrl}/auth`, authRouter)
     app.use(`${baseUrl}/users`, userRouter)
-    app.use('*', (req, res) => {
+    app.use('*', (req, res,next) => {
         return next(new AppError("path not found",404))
     })
     process.on('unhandledRejection', (err) => {
