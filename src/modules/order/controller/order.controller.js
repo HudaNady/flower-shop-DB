@@ -82,7 +82,8 @@ export const addOrder = asyncHandler(async (req, res, next) => {
 
 
 export const getUserOrders = asyncHandler(async (req, res, next) => {
-    const orders = await Order.find({user:req.user._id}).populate('products.product','title priceAfterDiscount')
+    const orders = await Order.find({user:req.user._id}) .populate('products.product')
+    .populate('user', 'firstName lastName email userName'); 
 
     if (orders.length) {
         return res.status(200).json({ message: "Orders retrieved successfully", orders });
