@@ -52,12 +52,14 @@ const userSchema = new mongoose.Schema({
 }, {
     timestamps: true 
 });
-userSchema.post('findOneAndUpdate', function(doc) {
-    if (doc && doc.image && !doc.image.startsWith('http')) {
-      const baseUrl = process.env.CLOUDINARY_BASE_URL;
-      doc.image = `${baseUrl}/${doc.image}`;
+userSchema.post('init', (doc) => {
+    if (doc.image) {
+        if (!doc.image.startsWith('http')) {
+            const baseUrl = process.env.CLOUDINARY_BASE_URL;
+            doc.image = `${baseUrl}/${doc.image}`;
+        }
     }
-  });
+});
 userSchema.virtual('userName').get(function(){
     return `${this.firstName} ${this.lastName}`
 })
