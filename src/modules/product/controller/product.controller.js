@@ -49,7 +49,6 @@ export const getAllProducts = asyncHandler(async (req, res, next) => {
     product.rateAvrage = averageRating;
     await product.save();
   }
-  await Product.save();
   const total = findproducts.length;
   if (products.length) {
     return res
@@ -77,7 +76,6 @@ export const getAllProductsInCatecory = asyncHandler(async (req, res, next) => {
     product.rateAvrage = averageRating;
     await product.save();
   }
-  await Product.save();
   if (products.length) {
     return res.status(200).json({ message: "done", products, status: 200 });
   }
@@ -106,6 +104,7 @@ export const getProductById = asyncHandler(async (req, res, next) => {
       ? (totalRating / product.reviews.length).toFixed(1)
       : product.rateAvrage;
     product.rateAvrage = averageRating;
+    await product.save()
     return res
       .status(200)
       .json({ message: "Product retrieved successfully", product });
