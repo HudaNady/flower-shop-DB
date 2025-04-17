@@ -53,4 +53,13 @@ export const updateUserSchema = joi.object({
     "string.min": "street must be at least 3 characters",
     "string.max": "street must be at most 30 characters",
   }),
+  file: joi.object({
+    size: joi.number().positive().required(),
+    originalname: joi.string(),
+    mimetype: joi.string().required(),
+    encoding: joi.string().required(),
+    fieldname: joi.string().required(),
+    filename: joi.string(),
+    path: joi.string().uri(),
+  }),
 });
