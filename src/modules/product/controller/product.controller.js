@@ -67,7 +67,7 @@ export const getProductById = asyncHandler(async (req, res, next) => {
             path: 'reviews',
             populate: {
                 path: 'user',
-                select: 'name email' 
+                select: 'userName email' 
             }
         }
     ]);

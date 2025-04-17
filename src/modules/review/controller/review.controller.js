@@ -53,3 +53,12 @@ export const deleteReview = asyncHandler(async (req, res, next) => {
     }
     return next(new AppError("Forbidden", 403));
 });
+
+export const getReviewsForProduct = asyncHandler(async (req, res, next) => {
+    const reviews = await Review.find({ product: req.params._id }).populate('user','firstName lastName email userName' )
+
+    if (reviews.length > 0) {
+        return res.status(200).json({ message: "Reviews retrieved successfully", reviews });
+    }
+    return next(new AppError("No reviews found for this product", 404));
+});
