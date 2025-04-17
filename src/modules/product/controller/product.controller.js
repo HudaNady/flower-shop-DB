@@ -43,7 +43,7 @@ export const getAllProducts = asyncHandler(async (req, res, next) => {
       (sum, review) => sum + review.rating,
       0
     );
-    const averageRating = product.reviews.length
+    const averageRating = product.reviews.length!==0
       ? (totalRating / product.reviews.length).toFixed(1)
       : product.rateAvrage;
     product.rateAvrage = averageRating;
@@ -70,7 +70,7 @@ export const getAllProductsInCatecory = asyncHandler(async (req, res, next) => {
       (sum, review) => sum + review.rating,
       0
     );
-    const averageRating = product.reviews.length
+    const averageRating = product.reviews.length!==0
       ? (totalRating / product.reviews.length).toFixed(1)
       : product.rateAvrage;
     product.rateAvrage = averageRating;
@@ -100,7 +100,7 @@ export const getProductById = asyncHandler(async (req, res, next) => {
       (sum, review) => sum + review.rating,
       0
     );
-    const averageRating = product.reviews.length
+    const averageRating = product.reviews.length!==0
       ? (totalRating / product.reviews.length).toFixed(1)
       : product.rateAvrage;
     product.rateAvrage = averageRating;
