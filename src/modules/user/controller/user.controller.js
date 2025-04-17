@@ -5,7 +5,6 @@ import bcryptjs from 'bcryptjs';
 
 export const updatePassword = asyncHandler(async (req, res, next) => {
     const { currentPassword, newPassword } = req.body;
-    req.body.image = req.file?.filename;
 
     const user = await User.findById(req.user._id);
 
@@ -27,10 +26,11 @@ export const updatePassword = asyncHandler(async (req, res, next) => {
 
 export const updateUserData = asyncHandler(async (req, res, next) => {
     const { email } = req.body;
+    req.body.image = req.file?.filename;
 
     // Check for email conflict, excluding the current user's email
     const conflictEmail = await User.findOne({ email, _id: { $ne: req.user._id } });
-    if (conflictEmail) {
+    if (!conflictEmail) {
         return next(new AppError("Email already in use", 400));
     }
 
