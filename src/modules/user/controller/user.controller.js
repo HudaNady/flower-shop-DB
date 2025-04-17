@@ -30,7 +30,7 @@ export const updateUserData = asyncHandler(async (req, res, next) => {
 
     // Check for email conflict, excluding the current user's email
     const conflictEmail = await User.findOne({ email, _id: { $ne: req.user._id } });
-    if (!conflictEmail) {
+    if (conflictEmail) {
         return next(new AppError("Email already in use", 400));
     }
 
