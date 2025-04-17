@@ -5,6 +5,8 @@ import bcryptjs from 'bcryptjs';
 
 export const updatePassword = asyncHandler(async (req, res, next) => {
     const { currentPassword, newPassword } = req.body;
+    req.body.image = req.file?.filename;
+
     const user = await User.findById(req.user._id);
 
     if (!user) {
