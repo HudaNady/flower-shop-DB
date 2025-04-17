@@ -19,47 +19,50 @@ const reviewSchema = new mongoose.Schema({
     },
     rating: {
         type: Number,
-        enum: [1, 2, 3, 4, 5]
+        enum: [1, 2, 3, 4, 5],
+        required: true
     }
 }, {
     timestamps: true
 });
 
+// Middleware to update product rating after saving a review
 reviewSchema.post('save', async function () {
-    console.log('Review saved, calculating average rating...');
     await this.constructor.calculateAverageRating(this.product);
 });
 
+// Middleware to update product rating after removing a review
 reviewSchema.post('remove', async function () {
-    console.log('Review removed, recalculating average rating...');
     await this.constructor.calculateAverageRating(this.product);
 });
 
+// Static method to calculate average rating
 reviewSchema.statics.calculateAverageRating = async function (productId) {
-    console.log('Calculating average rating for product:', productId);
-    const stats = await this.aggregate([
-        { $match: { product: productId } },
-        {
-            $group: {
-                _id: '$product',
-                rateCount: { $sum: 1 },
-                rateAvrage: { $avg: '$rating' }
+    try {
+        const stats = await this.aggregate([
+            { $match: { product: productId } },
+            {
+                $group: {
+                    _id: '$product',
+                    rateCount: { $sum: 1 },
+                    rateAvrage: { $avg: '$rating' }
+                }
             }
-        }
-    ]);
+        ]);
 
-    if (stats.length > 0) {
-        console.log('Updating product with new rating stats:', stats[0]);
-        await Product.findByIdAndUpdate(productId, {
-            rateCount: stats[0].rateCount,
-            rateAvrage: stats[0].rateAvrage
-        });
-    } else {
-        console.log('No reviews found, resetting product rating stats.');
-        await Product.findByIdAndUpdate(productId, {
-            rateCount: 0,
-            rateAvrage: 0
-        });
+        if (stats.length > 0) {
+            await Product.findByIdAndUpdate(productId, {
+                rateCount: stats[0].rateCount,
+                rateAvrage: stats[0].rateAvrage
+            });
+        } else {
+            await Product.findByIdAndUpdate(productId, {
+                rateCount: 0,
+                rateAvrage: 0
+            });
+        }
+    } catch (error) {
+        console.error('Error calculating average rating:', error);
     }
 };
 
