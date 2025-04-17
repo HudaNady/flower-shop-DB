@@ -87,18 +87,6 @@ export const getAllProductsInCatecory = asyncHandler(async (req, res, next) => {
 });
 
 export const getProductById = asyncHandler(async (req, res, next) => {
-  const productfind = await Product.findById(req.params._id);
-  const totalRating = productfind.reviews.reduce(
-    (sum, review) => sum + review.rating,
-    0
-  );
-  const averageRating =
-    productfind.reviews.length !== 0
-      ? (totalRating / productfind.reviews.length).toFixed(1)
-      : productfind.rateAvrage;
-  product.rateAvrage = averageRating;
-  await product.save();
-
   const product = await Product.findById(req.params._id).populate([
     {
       path: "category",
