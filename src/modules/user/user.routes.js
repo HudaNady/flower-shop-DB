@@ -4,6 +4,7 @@ import { authentication, authorization } from "../../middleware/auth.js";
 import validation from "../../middleware/validation.js";
 import { updatePassword, updateUserSchema } from "./user.validation.js";
 import roles from "../../types/roles.js";
+import upload, { customValdation } from "../../middleware/multer.js";
 
 
 const router=Router()
