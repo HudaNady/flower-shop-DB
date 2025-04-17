@@ -8,7 +8,7 @@ import roles from "../../types/roles.js";
 
 const router=Router()
 router.put('/updatePassword',authentication,authorization([roles.user,roles.admin]),validation(updatePassword),user.updatePassword)
-router.put('/updateData',authentication,authorization([roles.user,roles.admin]),validation(updateUserSchema),user.updateUserData)
+router.put('/updateData',authentication,authorization([roles.user,roles.admin]),validation(updateUserSchema),upload(customValdation.images,'profile'),user.updateUserData)
 router.get('/user',authentication,authorization([roles.user,roles.admin]),user.getUserData)
 router.get('/',authentication,authorization([roles.admin]),user.getUsers)
 
