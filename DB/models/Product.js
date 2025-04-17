@@ -99,15 +99,6 @@ productSchema.pre(/^find/,function(){
     this.populate("reviews")
 })
 
-productSchema.pre('find', async function (next) {
-    const products = await this.model.find(this.getQuery());
-    for (const product of products) {
-      const totalRating = product.reviews.reduce((sum, review) => sum + review.rating, 0);
-      const averageRating = product.reviews.length!==0 ? (totalRating / product.reviews.length).toFixed(1) : product.rateAvrage;
-      product.rateAvrage = averageRating;
-      await product.save();
-    }
-    next();
-  });
+
 const Product=mongoose.model('Product',productSchema)
 export default Product

@@ -24,6 +24,19 @@ export const addProduct = asyncHandler(async (req, res, next) => {
 });
 
 export const getAllProducts = asyncHandler(async (req, res, next) => {
+  const findproducts = await Product.find();
+  for (const product of findproducts) {
+    const totalRating = product.reviews.reduce(
+      (sum, review) => sum + review.rating,
+      0
+    );
+    const averageRating =
+      product.reviews.length > 0
+        ? (totalRating / product.reviews.length).toFixed(1)
+        : product.rateAvrage;
+    product.rateAvrage = averageRating;
+    await product.save();
+  }
   const mongooseQuery = Product.find();
 
   const apiFeatures = new ApiFeatures(mongooseQuery, req.query)
@@ -37,18 +50,6 @@ export const getAllProducts = asyncHandler(async (req, res, next) => {
       path: "category",
     },
   ]);
-  const findproducts = await Product.find();
-  for (const product of findproducts) {
-    const totalRating = product.reviews.reduce(
-      (sum, review) => sum + review.rating,
-      0
-    );
-    const averageRating = product.reviews.length!==0
-      ? (totalRating / product.reviews.length).toFixed(1)
-      : product.rateAvrage;
-    product.rateAvrage = averageRating;
-    await product.save();
-  }
   const total = findproducts.length;
   if (products.length) {
     return res
@@ -59,23 +60,26 @@ export const getAllProducts = asyncHandler(async (req, res, next) => {
 });
 
 export const getAllProductsInCatecory = asyncHandler(async (req, res, next) => {
+  const findproducts = await Product.find();
+  for (const product of findproducts) {
+    const totalRating = product.reviews.reduce(
+      (sum, review) => sum + review.rating,
+      0
+    );
+    const averageRating =
+      product.reviews.length > 0
+        ? (totalRating / product.reviews.length).toFixed(1)
+        : product.rateAvrage;
+    product.rateAvrage = averageRating;
+    await product.save();
+  }
   let apiFeatures = new ApiFeatures(
     Product.find({ category: req.params._id }),
     req.query
   );
   apiFeatures = apiFeatures.pagination().sort().fields().search();
   const products = await apiFeatures.mongooseQuery.populate("category");
-  for (const product of products) {
-    const totalRating = product.reviews.reduce(
-      (sum, review) => sum + review.rating,
-      0
-    );
-    const averageRating = product.reviews.length!==0
-      ? (totalRating / product.reviews.length).toFixed(1)
-      : product.rateAvrage;
-    product.rateAvrage = averageRating;
-    await product.save();
-  }
+
   if (products.length) {
     return res.status(200).json({ message: "done", products, status: 200 });
   }
@@ -83,6 +87,18 @@ export const getAllProductsInCatecory = asyncHandler(async (req, res, next) => {
 });
 
 export const getProductById = asyncHandler(async (req, res, next) => {
+  const productfind = await Product.findById(req.params._id);
+  const totalRating = productfind.reviews.reduce(
+    (sum, review) => sum + review.rating,
+    0
+  );
+  const averageRating =
+    productfind.reviews.length !== 0
+      ? (totalRating / productfind.reviews.length).toFixed(1)
+      : productfind.rateAvrage;
+  product.rateAvrage = averageRating;
+  await product.save();
+
   const product = await Product.findById(req.params._id).populate([
     {
       path: "category",
@@ -96,15 +112,6 @@ export const getProductById = asyncHandler(async (req, res, next) => {
     },
   ]);
   if (product) {
-    const totalRating = product.reviews.reduce(
-      (sum, review) => sum + review.rating,
-      0
-    );
-    const averageRating = product.reviews.length!==0
-      ? (totalRating / product.reviews.length).toFixed(1)
-      : product.rateAvrage;
-    product.rateAvrage = averageRating;
-    await product.save()
     return res
       .status(200)
       .json({ message: "Product retrieved successfully", product });
