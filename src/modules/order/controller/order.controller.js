@@ -1,3 +1,4 @@
+import { date } from "joi";
 import Cart from "../../../../DB/models/Cart.js";
 import Order from "../../../../DB/models/Order.js";
 import Product from "../../../../DB/models/Product.js";
@@ -38,6 +39,10 @@ export const addOrder = asyncHandler(async (req, res, next) => {
     req.body.products = cart.products;
     req.body.total = Math.round(cart.total);
     req.body.user = req.user._id;
+    if (req.body.deliveredAt && new Date(req.body.deliveredAt) < Date.now()) {
+        return next(new AppError("Enter a valid future date for delivery", 400));
+    }
+    req.body.status='pending'
     const order = new Order(req.body);
     const newOrder = await order.save();
 

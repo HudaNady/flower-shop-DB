@@ -51,6 +51,11 @@ const orderSchema= new mongoose.Schema({
         mobileNumber:String,},
         required:true
     },
+    status: {
+        type: String,
+        enum: ['pending', 'accepted', 'rejected', 'canceled'],
+        default: 'pending'
+    }
 },{
     timestamps:true
 })
