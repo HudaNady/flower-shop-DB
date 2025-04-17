@@ -100,3 +100,22 @@ export const getAllOrders = asyncHandler(async (req, res, next) => {
     return next(new AppError("Orders not found", 404));
 });
 
+export const updateStatus=asyncHandler(
+    async (req, res) => {
+        const { orderId } = req.params;
+        const { status } = req.body;
+    
+        if (!['pending', 'accepted', 'rejected'].includes(status)) {
+            return res.status(400).json({ message: 'Invalid status value' });
+        }
+    
+            const order = await Order.findById(orderId);
+            if (!order) {
+                return res.status(404).json({ message: 'Order not found' });
+            }
+            order.status = status;
+            await order.save();
+            res.status(200).json({ message: 'Order status updated successfully', order });
+        
+        }
+)
