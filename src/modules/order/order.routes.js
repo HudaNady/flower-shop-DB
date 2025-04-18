@@ -9,7 +9,7 @@ const router=Router()
 router.post('/',authentication,authorization([roles.user]),order.addOrder)
 router.get('/user',authentication,authorization([roles.user]),order.getUserOrders)
 router.get('/',authentication,authorization([roles.admin]),order.getAllOrders)
-router.put('/:_id',authentication,authorization([roles.admin]),order.updateStatus)
+router.put('/:orderId',authentication,authorization([roles.admin]),order.updateStatus)
 
 
 export default router
